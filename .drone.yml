@@ -9,7 +9,6 @@ steps:
   - name: build
     image: alpine:latest
     commands:
-      - apk update
       - echo "sucessfully built"
     depends_on:
       - clone
