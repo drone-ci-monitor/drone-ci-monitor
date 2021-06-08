@@ -1,0 +1,43 @@
+---
+kind: pipeline
+name: test
+when:               # Only run the pipeline when it's a push to master
+  event: [ push ]
+
+
+steps:
+  - name: build
+    image: alpine:latest
+    commands:
+      - apk update
+      - echo "sucessfully built"
+
+  - name: unit test
+    image: alpine:latest
+    commands:
+      - echo "running unit tests"
+      - sleep 1
+      - echo "unit tests succeeded"
+
+
+  - name: integration test
+    image: alpine:latest
+    commands:
+      - echo "running integration tests"
+      - sleep 1
+      - echo "integration tests succeeded"
+
+  - name: component test
+    image: alpine:latest
+    commands:
+      - echo "running component tests"
+      - sleep 1
+      - echo "component tests succeeded"
+
+
+  - name: e2e test
+    image: alpine:latest
+    commands:
+      - echo "running e2e tests"
+      - sleep 1
+      - echo "e2e tests succeeded"
