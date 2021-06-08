@@ -44,7 +44,7 @@ steps:
     image: alpine:latest@sha256:69e70a79f2d41ab5d637de98c1e0b055206ba40a8145e7bddb55ccc04e13cf8f
     commands:
       - echo "running e2e tests"
-      - sleep 30
-      - echo "e2e tests succeeded"
+      - echo "e2e tests failed because of an infrastructure problem"
+      - exit 1
     depends_on:
       - clone
