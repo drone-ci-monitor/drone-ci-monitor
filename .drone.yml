@@ -7,33 +7,33 @@ when:               # Only run the pipeline when it's a push to master
 
 steps:
   - name: build
-    image: alpine:latest
+    image: alpine:latest@sha256:69e70a79f2d41ab5d637de98c1e0b055206ba40a8145e7bddb55ccc04e13cf8f
     commands:
       - echo "sucessfully built"
 
   - name: unit test
-    image: alpine:latest
+    image: alpine:latest@sha256:69e70a79f2d41ab5d637de98c1e0b055206ba40a8145e7bddb55ccc04e13cf8f
     commands:
       - echo "running unit tests"
       - sleep 1
       - echo "unit tests succeeded"
 
   - name: integration test
-    image: alpine:latest
+    image: alpine:latest@sha256:69e70a79f2d41ab5d637de98c1e0b055206ba40a8145e7bddb55ccc04e13cf8f
     commands:
       - echo "running integration tests"
       - sleep 5
       - echo "integration tests succeeded"
 
   - name: component test
-    image: alpine:latest
+    image: alpine:latest@sha256:69e70a79f2d41ab5d637de98c1e0b055206ba40a8145e7bddb55ccc04e13cf8f
     commands:
       - echo "running component tests"
       - sleep 15
       - echo "component tests succeeded"
 
   - name: e2e test
-    image: alpine:latest
+    image: alpine:latest@sha256:69e70a79f2d41ab5d637de98c1e0b055206ba40a8145e7bddb55ccc04e13cf8f
     commands:
       - echo "running e2e tests"
       - sleep 30
