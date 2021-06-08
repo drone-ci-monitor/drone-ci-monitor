@@ -10,6 +10,8 @@ steps:
     image: alpine:latest@sha256:69e70a79f2d41ab5d637de98c1e0b055206ba40a8145e7bddb55ccc04e13cf8f
     commands:
       - echo "sucessfully built"
+    depends_on:
+      - clone
 
   - name: unit test
     image: alpine:latest@sha256:69e70a79f2d41ab5d637de98c1e0b055206ba40a8145e7bddb55ccc04e13cf8f
@@ -17,6 +19,8 @@ steps:
       - echo "running unit tests"
       - sleep 1
       - echo "unit tests succeeded"
+    depends_on:
+      - clone
 
   - name: integration test
     image: alpine:latest@sha256:69e70a79f2d41ab5d637de98c1e0b055206ba40a8145e7bddb55ccc04e13cf8f
@@ -24,6 +28,8 @@ steps:
       - echo "running integration tests"
       - sleep 5
       - echo "integration tests succeeded"
+    depends_on:
+      - clone
 
   - name: component test
     image: alpine:latest@sha256:69e70a79f2d41ab5d637de98c1e0b055206ba40a8145e7bddb55ccc04e13cf8f
@@ -31,6 +37,8 @@ steps:
       - echo "running component tests"
       - sleep 15
       - echo "component tests succeeded"
+    depends_on:
+      - clone
 
   - name: e2e test
     image: alpine:latest@sha256:69e70a79f2d41ab5d637de98c1e0b055206ba40a8145e7bddb55ccc04e13cf8f
@@ -38,3 +46,5 @@ steps:
       - echo "running e2e tests"
       - sleep 30
       - echo "e2e tests succeeded"
+    depends_on:
+      - clone
