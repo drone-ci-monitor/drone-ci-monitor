@@ -1,23 +1,8 @@
 ---
 kind: pipeline
-name: webhook
-
-steps:
-- name: send
-  image: plugins/webhook
-  settings:
-    username: myusername
-    password: mypassword
-    urls: https://drone-ci-butler.ngrok.io/hooks/drone
-    skip_verify: true
-    debug: true
-
----
-kind: pipeline
 name: test
 when:               # Only run the pipeline when it's a push to master
   event: [ push ]
-
 
 steps:
   - name: build
@@ -62,3 +47,17 @@ steps:
       - echo "e2e tests succeeded"
     depends_on:
       - clone
+---
+kind: pipeline
+name: webhook
+
+steps:
+  - name: webhook
+    image: plugins/webhook
+    failure: ignore
+    settings:
+      username: myusername
+      password: mypassword
+      urls: https://drone-ci-butler.ngrok.io/hooks/drone
+      skip_verify: true
+      debug: true
