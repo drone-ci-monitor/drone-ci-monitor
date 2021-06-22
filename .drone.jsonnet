@@ -22,11 +22,12 @@ local failed_step(
 local success_step(
   name,
   output='',
+  commands=[],
   delay=0
       ) =
   base_node {
     name: name,
-    commands: ['echo -e "' + name + '"'] + ['sleep ' + delay + ''],
+    commands: ['echo -e "' + name + '"'] + ['sleep ' + delay + ''] + commands,
     when: { event: 'push' },
   };
 
@@ -41,7 +42,9 @@ local docker_pipeline(name, steps=[]) =
 /* Main pipeline */
 [
   docker_pipeline('success', [
-    success_step('build', delay=1),
+    success_step('build', delay=0, commands=[
+      'pip install pytest pytest-cov'
+    ]),
     success_step('unit tests', delay=2),
     success_step('integration tests', delay=5),
     success_step('component tests', delay=10),
