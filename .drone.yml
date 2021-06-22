@@ -1,112 +1,156 @@
 ---
 kind: pipeline
+type: docker
 name: success
-when:
-  event: [ push ]
+
+platform:
+  os: linux
+  arch: amd64
 
 steps:
-  - name: build
-    image: alpine:latest@sha256:69e70a79f2d41ab5d637de98c1e0b055206ba40a8145e7bddb55ccc04e13cf8f
-    commands:
-      - echo "sucessfully built"
-    depends_on:
-      - clone
+- name: build
+  pull: if-not-exists
+  image: python:3.7-alpine@sha256:deaefc5e07ef1f3420411dd5225b2fc2ab23ae7731e8cb216d9fe74557d81db5
+  commands:
+  - echo -e "build"
+  - sleep 1
+  when:
+    event:
+    - push
 
-  - name: unit test
-    image: alpine:latest@sha256:69e70a79f2d41ab5d637de98c1e0b055206ba40a8145e7bddb55ccc04e13cf8f
-    commands:
-      - echo "running unit tests"
-      - sleep 1
-      - echo "unit tests succeeded"
-    depends_on:
-      - clone
+- name: unit tests
+  pull: if-not-exists
+  image: python:3.7-alpine@sha256:deaefc5e07ef1f3420411dd5225b2fc2ab23ae7731e8cb216d9fe74557d81db5
+  commands:
+  - echo -e "unit tests"
+  - sleep 2
+  when:
+    event:
+    - push
 
-  - name: integration test
-    image: alpine:latest@sha256:69e70a79f2d41ab5d637de98c1e0b055206ba40a8145e7bddb55ccc04e13cf8f
-    commands:
-      - echo "running integration tests"
-      - sleep 5
-      - echo "integration tests succeeded"
-    depends_on:
-      - clone
+- name: integration tests
+  pull: if-not-exists
+  image: python:3.7-alpine@sha256:deaefc5e07ef1f3420411dd5225b2fc2ab23ae7731e8cb216d9fe74557d81db5
+  commands:
+  - echo -e "integration tests"
+  - sleep 5
+  when:
+    event:
+    - push
 
-  - name: component test
-    image: alpine:latest@sha256:69e70a79f2d41ab5d637de98c1e0b055206ba40a8145e7bddb55ccc04e13cf8f
-    commands:
-      - echo "running component tests"
-      - sleep 15
-      - echo "component tests succeeded"
-    depends_on:
-      - clone
+- name: component tests
+  pull: if-not-exists
+  image: python:3.7-alpine@sha256:deaefc5e07ef1f3420411dd5225b2fc2ab23ae7731e8cb216d9fe74557d81db5
+  commands:
+  - echo -e "component tests"
+  - sleep 10
+  when:
+    event:
+    - push
 
-  - name: e2e test
-    image: alpine:latest@sha256:69e70a79f2d41ab5d637de98c1e0b055206ba40a8145e7bddb55ccc04e13cf8f
-    commands:
-      - echo "running e2e tests"
-      - sleep 30
-      - echo "e2e tests succeeded"
-    depends_on:
-      - clone
+- name: functional tests
+  pull: if-not-exists
+  image: python:3.7-alpine@sha256:deaefc5e07ef1f3420411dd5225b2fc2ab23ae7731e8cb216d9fe74557d81db5
+  commands:
+  - echo -e "functional tests"
+  - sleep 15
+  when:
+    event:
+    - push
+
+- name: e2e tests
+  pull: if-not-exists
+  image: python:3.7-alpine@sha256:deaefc5e07ef1f3420411dd5225b2fc2ab23ae7731e8cb216d9fe74557d81db5
+  commands:
+  - echo -e "e2e tests"
+  - sleep 30
+  when:
+    event:
+    - push
 
 ---
 kind: pipeline
-name: virtual errors
-when:               # Only run the pipeline when it's a push to master
-  event: [ push ]
+type: docker
+name: error
+
+platform:
+  os: linux
+  arch: amd64
 
 steps:
-  - name: verify docs
-    image: alpine:latest@sha256:69e70a79f2d41ab5d637de98c1e0b055206ba40a8145e7bddb55ccc04e13cf8f
-    commands:
-      - echo "please run prettier:docs to fix this issue"
-      - exit 1
-    depends_on:
-      - clone
+- name: slack server error
+  pull: if-not-exists
+  image: python:3.7-alpine@sha256:deaefc5e07ef1f3420411dd5225b2fc2ab23ae7731e8cb216d9fe74557d81db5
+  commands:
+  - echo -e "slack server error"
+  - echo -e ''
+  - exit 1
+  when:
+    event:
+    - push
 
-  - name: slack error
-    image: alpine:latest@sha256:69e70a79f2d41ab5d637de98c1e0b055206ba40a8145e7bddb55ccc04e13cf8f
-    commands:
-      - echo "slack server error"
-      - exit 2
-    depends_on:
-      - clone
+- name: verify docs
+  pull: if-not-exists
+  image: python:3.7-alpine@sha256:deaefc5e07ef1f3420411dd5225b2fc2ab23ae7731e8cb216d9fe74557d81db5
+  commands:
+  - echo -e "verify docs"
+  - echo -e 'please run prettier:docs to fix this issue'
+  - exit 1
+  when:
+    event:
+    - push
 
-  - name: connection refused
-    image: alpine:latest@sha256:69e70a79f2d41ab5d637de98c1e0b055206ba40a8145e7bddb55ccc04e13cf8f
-    commands:
-      - echo "samizdat ECONNREFUSED"
-      - exit 3
-    depends_on:
-      - clone
+- name: connection refused
+  pull: if-not-exists
+  image: python:3.7-alpine@sha256:deaefc5e07ef1f3420411dd5225b2fc2ab23ae7731e8cb216d9fe74557d81db5
+  commands:
+  - echo -e "connection refused"
+  - echo -e 'samizdat ECONNREFUSED'
+  - exit 1
+  when:
+    event:
+    - push
 
+- name: merge conflict
+  pull: if-not-exists
+  image: python:3.7-alpine@sha256:deaefc5e07ef1f3420411dd5225b2fc2ab23ae7731e8cb216d9fe74557d81db5
+  commands:
+  - echo -e "merge conflict"
+  - echo -e 'Automatic merge failed; fix conflicts in your git branch'
+  - exit 1
+  when:
+    event:
+    - push
 
-  - name: merge conflict
-    image: alpine:latest@sha256:69e70a79f2d41ab5d637de98c1e0b055206ba40a8145e7bddb55ccc04e13cf8f
-    commands:
-      - echo "Automatic merge failed; fix conflicts in your git branch"
-      - exit 4
+- name: yarn dependencies
+  pull: if-not-exists
+  image: python:3.7-alpine@sha256:deaefc5e07ef1f3420411dd5225b2fc2ab23ae7731e8cb216d9fe74557d81db5
+  commands:
+  - echo -e "yarn dependencies"
+  - echo -e 'Couldn'"'"'t find any versions for "react"'
+  - exit 1
+  when:
+    event:
+    - push
 
-    depends_on:
-      - clone
-
-  - name: yarn dependencies
-    image: alpine:latest@sha256:69e70a79f2d41ab5d637de98c1e0b055206ba40a8145e7bddb55ccc04e13cf8f
-    commands:
-      - echo 'Couldn\'t find any versions for "react"'
-      - exit 5
-    depends_on:
-      - clone
 ---
 kind: pipeline
-name: webhook
+type: docker
+name: webhooks
+
+platform:
+  os: linux
+  arch: amd64
 
 steps:
-  - name: webhook
-    image: plugins/webhook
-    failure: ignore
-    settings:
-      username: myusername
-      password: mypassword
-      urls: https://drone-ci-butler.ngrok.io/hooks/drone
-      skip_verify: true
-      debug: true
+- name: webhook
+  image: plugins/webhook
+  settings:
+    debug: true
+    password: mypassword
+    skip_verify: true
+    urls: https://drone-ci-butler.ngrok.io/hooks/drone
+    username: myusername
+  failure: ignore
+
+...
