@@ -48,6 +48,55 @@ steps:
     depends_on:
       - clone
 ---
+---
+kind: pipeline
+name: virtual errors
+when:               # Only run the pipeline when it's a push to master
+  event: [ push ]
+
+steps:
+  - name: verify docs
+    image: alpine:latest@sha256:69e70a79f2d41ab5d637de98c1e0b055206ba40a8145e7bddb55ccc04e13cf8f
+    commands:
+      - echo "please run prettier:docs to fix this issue"
+      - exit 1
+    depends_on:
+      - clone
+
+  - name: slack error
+    image: alpine:latest@sha256:69e70a79f2d41ab5d637de98c1e0b055206ba40a8145e7bddb55ccc04e13cf8f
+    commands:
+      - echo "slack server error"
+      - exit 2
+    depends_on:
+      - clone
+
+  - name: connection refused
+    image: alpine:latest@sha256:69e70a79f2d41ab5d637de98c1e0b055206ba40a8145e7bddb55ccc04e13cf8f
+    commands:
+      - echo "samizdat ECONNREFUSED"
+      - exit 3
+    depends_on:
+      - clone
+
+
+  - name: merge conflict
+    image: alpine:latest@sha256:69e70a79f2d41ab5d637de98c1e0b055206ba40a8145e7bddb55ccc04e13cf8f
+    commands:
+      - echo "Automatic merge failed; fix conflicts in your git branch"
+      - exit 4
+
+    depends_on:
+      - clone
+
+  - name: yarn dependencies
+    image: alpine:latest@sha256:69e70a79f2d41ab5d637de98c1e0b055206ba40a8145e7bddb55ccc04e13cf8f
+    commands:
+      - echo 'Couldn\'t find any versions for "react"'
+      - exit 5
+    depends_on:
+      - clone
+---
 kind: pipeline
 name: webhook
 
