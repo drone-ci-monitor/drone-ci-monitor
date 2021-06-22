@@ -16,7 +16,7 @@ local failed_step(
   base_node {
     name: name,
     commands: ['echo -e "' + name + '"'] + ['echo -e ' + std.escapeStringBash(output)] + ['exit ' + exit_code],
-    when: { event: 'push' },
+//    when: { event: 'push' },
   };
 
 local success_step(
@@ -28,7 +28,7 @@ local success_step(
   base_node {
     name: name,
     commands: ['echo -e "' + name + '"'] + ['sleep ' + delay + ''] + commands,
-    when: { event: 'push' },
+//    when: { event: 'push' },
   };
 
 local docker_pipeline(name, steps=[]) =

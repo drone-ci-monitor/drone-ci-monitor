@@ -15,9 +15,6 @@ steps:
   - echo -e "build"
   - sleep 0
   - pip install pytest pytest-cov
-  when:
-    event:
-    - push
 
 - name: unit tests
   pull: if-not-exists
@@ -25,9 +22,6 @@ steps:
   commands:
   - echo -e "unit tests"
   - sleep 2
-  when:
-    event:
-    - push
 
 - name: integration tests
   pull: if-not-exists
@@ -35,9 +29,6 @@ steps:
   commands:
   - echo -e "integration tests"
   - sleep 5
-  when:
-    event:
-    - push
 
 - name: component tests
   pull: if-not-exists
@@ -45,9 +36,6 @@ steps:
   commands:
   - echo -e "component tests"
   - sleep 10
-  when:
-    event:
-    - push
 
 - name: functional tests
   pull: if-not-exists
@@ -55,9 +43,6 @@ steps:
   commands:
   - echo -e "functional tests"
   - sleep 15
-  when:
-    event:
-    - push
 
 - name: e2e tests
   pull: if-not-exists
@@ -65,9 +50,6 @@ steps:
   commands:
   - echo -e "e2e tests"
   - sleep 30
-  when:
-    event:
-    - push
 
 ---
 kind: pipeline
@@ -86,9 +68,6 @@ steps:
   - echo -e "slack server error"
   - echo -e ''
   - exit 1
-  when:
-    event:
-    - push
 
 - name: verify docs
   pull: if-not-exists
@@ -97,9 +76,6 @@ steps:
   - echo -e "verify docs"
   - echo -e 'please run prettier:docs to fix this issue'
   - exit 1
-  when:
-    event:
-    - push
 
 - name: connection refused
   pull: if-not-exists
@@ -108,9 +84,6 @@ steps:
   - echo -e "connection refused"
   - echo -e 'samizdat ECONNREFUSED'
   - exit 1
-  when:
-    event:
-    - push
 
 - name: merge conflict
   pull: if-not-exists
@@ -119,9 +92,6 @@ steps:
   - echo -e "merge conflict"
   - echo -e 'Automatic merge failed; fix conflicts in your git branch'
   - exit 1
-  when:
-    event:
-    - push
 
 - name: yarn dependencies
   pull: if-not-exists
@@ -130,9 +100,6 @@ steps:
   - echo -e "yarn dependencies"
   - echo -e 'Couldn'"'"'t find any versions for "react"'
   - exit 1
-  when:
-    event:
-    - push
 
 ---
 kind: pipeline
