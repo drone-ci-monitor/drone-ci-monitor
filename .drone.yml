@@ -1,7 +1,7 @@
 ---
 kind: pipeline
-name: test
-when:               # Only run the pipeline when it's a push to master
+name: success
+when:
   event: [ push ]
 
 steps:
